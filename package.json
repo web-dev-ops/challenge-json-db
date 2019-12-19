@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "mkdir data & node server.js",
     "test": "node test.js"
   },
   "keywords": [],
