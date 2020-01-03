@@ -36,7 +36,7 @@ async function putData (studentId, arrPropertyNames, body, res) {
   const filePath = `data/${studentId}.json`
   let originalData = {}
   try {
-    const buffer = await fs.readFileSync(filePath)
+    const buffer = fs.readFileSync(filePath)
     originalData = JSON.parse(buffer.toString())
   } catch (e) {
     console.log(`The original file ${studentId}.json is not existing in the data folder. Now creating the file...`)
@@ -44,14 +44,14 @@ async function putData (studentId, arrPropertyNames, body, res) {
   }
   const newJsonData = buildObjWithKeyArray(arrPropertyNames, body)
   const jsonResult = { ...originalData, ...newJsonData }
-  await fs.writeFileSync(filePath, JSON.stringify(jsonResult), 'utf8')
+  fs.writeFileSync(filePath, JSON.stringify(jsonResult), 'utf8')
   return await res.json(jsonResult)
 }
 
 async function getData (studentId, arrPropertyNames, res) {
   const filePath = `data/${studentId}.json`
   try {
-    const buffer = await fs.readFileSync(filePath)
+    const buffer = fs.readFileSync(filePath)
     let jsonData = JSON.parse(buffer.toString())
     arrPropertyNames.map(property => {
       if (!jsonData.hasOwnProperty(property)) {
@@ -68,7 +68,7 @@ async function getData (studentId, arrPropertyNames, res) {
 async function deleteData (studentId, arrPropertyNames, res) {
   const filePath = `data/${studentId}.json`
   try {
-    const buffer = await fs.readFileSync(filePath)
+    const buffer = fs.readFileSync(filePath)
     const jsonData = JSON.parse(buffer.toString())
     let deleteData = jsonData
     arrPropertyNames.filter((property, i) => i !== arrPropertyNames.length - 1).map(property => {
@@ -82,7 +82,7 @@ async function deleteData (studentId, arrPropertyNames, res) {
       throw new Error(`Invalid property with ${finalProperty}`)
     }
     delete deleteData[finalProperty]
-    await fs.writeFileSync(filePath, JSON.stringify(jsonData), 'utf8')
+    fs.writeFileSync(filePath, JSON.stringify(jsonData), 'utf8')
     return await res.json(jsonData)
   } catch (e) {
     return await res.status(404).json({ error: e.message })
